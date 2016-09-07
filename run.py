@@ -27,6 +27,8 @@ def main(dotfile):
 
     nx.drawing.nx_pydot.write_dot(ng,'sample.dot')
 
+    ch.ChainDic(ng)
+
 
 nargs = len(sys.argv)
 if (nargs != 3):

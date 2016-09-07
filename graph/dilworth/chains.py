@@ -8,7 +8,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import json
+from collections import defaultdict
 from collections import OrderedDict
+import pprint
 import numpy as np
 import re
 # from scipy import stats as sp
@@ -320,3 +322,9 @@ def CheckStartNode(ng):
         if count > 1:
             return 1
     return 0
+
+
+def ChainDic(ng):
+    chdic = defaultdict(list)
+    for n in nx.nodes(ng):
+        chdic[ng.node[n]['cid']].append(n)
