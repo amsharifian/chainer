@@ -10,29 +10,22 @@ import matplotlib.pyplot as plt
 import json
 from collections import OrderedDict
 import numpy as np
-import re
-#from scipy import stats as sp
-
-
 from graph.dilworth import chains as ch
 
 def main(dotfile):
-        ng = ch.CreateGraph(dotfile, [('style', '')]);
-        # PrintGraph(ng)
+    ng = ch.CreateGraph(dotfile, [('style', '')]);
 
-        ch.ExpandGEP(ng)
-        # PrintGraph(ng)
-       
+    # Check whether the graph has more than one BB node or not
+    if ch.CheckStartNode(ng) == 1:
+        sys.exit("The graph can not have more than one BB node")
+    
+    ch.ExpandGEP(ng)
+    
+    ch.RemoveDataNodes(ng)
+    
+    ch.Dilworth(ng)
 
-        ch.RemoveDataNodes(ng)
-        # PrintGraph(ng)
-
-        
-
-
-        ch.Dilworth(ng)
-        # PrintGraph(ng)
-        nx.drawing.nx_pydot.write_dot(ng,'sample.dot')
+    nx.drawing.nx_pydot.write_dot(ng,'sample.dot')
 
 
 nargs = len(sys.argv)

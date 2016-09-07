@@ -11,7 +11,7 @@ import json
 from collections import OrderedDict
 import numpy as np
 import re
-#from scipy import stats as sp
+# from scipy import stats as sp
 
 
 nodeid = 1
@@ -24,15 +24,15 @@ def PrintGraph(g):
 	a.layout()
 	a.draw(fig)
 
-##create networkx graph
+# create networkx graph
 def CreateGraph(filename, attrs):
-	B=pgv.AGraph(filename)
-	ng = nx.DiGraph(B)	
-	for attr in attrs:
-		attr_name = attr[0]
-		attr_val = attr[1]
-		nx.set_node_attributes(ng, attr_name, attr_val)
-	return(ng)
+    B=pgv.AGraph(filename)
+    ng = nx.DiGraph(B)	
+    for attr in attrs:
+        attr_name = attr[0]
+        attr_val = attr[1]
+        nx.set_node_attributes(ng, attr_name, attr_val)
+    return(ng)
 
 
 
@@ -60,7 +60,7 @@ def AddNode(ng, opcode, color='black'):
 	ng.node[ident]['opcode'] = opcode
 	ng.node[ident]['label'] = opcode + '(' + ident + ')' 
 	ng.node[ident]['color'] = color
-	#print 'added node', ident, opcode
+	# print 'added node', ident, opcode
 	AddEdge(ng, '1', ident, 'dotted')
 	
 
@@ -267,79 +267,56 @@ def ExtendBackward(g, dag, s, seed, chain, chains):
 
 
 def Dilworth(ng):
-	global unmatched
+    global unmatched
+    
+    g = nx.Graph()
+    gdas = nx.Graph() 
+    
+    # Creating bipirate graph from a partial order, and partitioning into chains according to a matching
+    for n in nx.topological_sort(ng, ng.nodes()):
+        g.add_node(Copy0(n))
+        g.node[Copy0(n)]['label'] = Copy0(ng.node[n]['label'])
+        g.add_node(Copy1(n))
+        g.node[Copy1(n)]['label'] = Copy1(ng.node[n]['label'])     
+        gdas.add_node(Copy0(n))
+        gdas.add_node(Copy1(n))
+        
+    for n in nx.nodes(ng):
+        for (u,v) in nx.edges(ng, n):
+            g.add_edge(Copy0(n), Copy1(v))
 
-	g = nx.Graph()
-	gdas = nx.Graph() 
+    # Running matching algorithm
+    s = nx.maximal_matching(g)
+    gdas.add_edges_from(s)
+    unmatched = nx.number_of_nodes(ng)
+    # print 'unmatched = ', unmatched
+    # nx.drawing.nx_pydot.write_dot(gdas,'sample.dot')
+    print s
+    
+    chains = []
+    while len(s) > 0:
+        # print '********', len(s)
+        seed = next(iter(s))	
+        chain = []
+        
+        ExtendForward(gdas, ng, s, seed, chain, chains)
+                # print '///////////'
+        ExtendBackward(gdas, ng, s, seed, chain, chains)
+                # print len(s)
+        print len(chain) + 1
+        
+        unmatched = unmatched - 1
+        chains.append(chain)
 
-        # Creating bipirate graph from a partial order, and partitioning into chains according to a matching
-	for n in nx.topological_sort(ng, ng.nodes()):
-		g.add_node(Copy0(n))
-		g.node[Copy0(n)]['label'] = Copy0(ng.node[n]['label'])
-		g.add_node(Copy1(n))
-		g.node[Copy1(n)]['label'] = Copy1(ng.node[n]['label'])     
-		gdas.add_node(Copy0(n))
-		gdas.add_node(Copy1(n))
-
-        # Adding edges to the graphs
-	for n in nx.nodes(ng):
-		for (u,v) in nx.edges(ng, n):
-			g.add_edge(Copy0(n), Copy1(v))
-
-        # Running matching algorithm
-	s = nx.maximal_matching(g)
-	gdas.add_edges_from(s)
-	unmatched = nx.number_of_nodes(ng)
-        # print 'unmatched = ', unmatched
-        # nx.drawing.nx_pydot.write_dot(gdas,'sample.dot')
-        print s
-
-	chains = []
-	while len(s) > 0:
-		#print '********', len(s)
-		seed = next(iter(s))	
-		chain = []
-
-		ExtendForward(gdas, ng, s, seed, chain, chains)
-		#print '///////////'
-		ExtendBackward(gdas, ng, s, seed, chain, chains)
-		#print len(s)
-		print len(chain) + 1
-
-		unmatched = unmatched - 1
-		chains.append(chain)
-
-
-	#print 'unmatched = ', unmatched
-	for x in range(0,unmatched):
-		print 1 
+    for x in range(0,unmatched):
+        print 1 
 
 
-# def main(dotfile):
-	# ng = CreateGraph(dotfile, [('style', '')]);
-	# PrintGraph(ng)
-
-
-	# ExpandGEP(ng)
-	# PrintGraph(ng)
-       
-
-	# RemoveDataNodes(ng)
-	# PrintGraph(ng)
-
-	
-
-
-	# Dilworth(ng)
-	# PrintGraph(ng)
-    # nx.drawing.nx_pydot.write_dot(ng,'sample.dot')
-
-
-# nargs = len(sys.argv)
-# if (nargs != 3):
-	# print 'usage: python chains.py <dot file> <output file>'
-	# sys.exit()
-
-# dotfile = sys.argv[1] 
-# fig = sys.argv[2]
-# main(dotfile) 
+def CheckStartNode(ng):
+    count = 0
+    for n in nx.nodes(ng):
+        if ng.node[n]['opcode'] == 'BB':
+            count += 1
+        if count > 1:
+            return 1
+    return 0
