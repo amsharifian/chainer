@@ -324,7 +324,19 @@ def CheckStartNode(ng):
     return 0
 
 
-def ChainDic(ng):
+def BreakHeadNode(ng):
+
+    # Getting list of ch IDs
     chdic = defaultdict(list)
     for n in nx.nodes(ng):
         chdic[ng.node[n]['cid']].append(n)
+        if ng.node[n]['opcode'] == 'BB':
+            headnode = n
+            headcid  = ng.node[n]['cid']
+
+    # Updating ch IDs
+    lastcid = len(chdic)
+    for n in chdic[headcid]:
+        print n
+        if n != headnode:
+            ng.node[n]['cid'] = lastcid

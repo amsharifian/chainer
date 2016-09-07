@@ -27,7 +27,7 @@ def main(dotfile):
 
     nx.drawing.nx_pydot.write_dot(ng,'sample.dot')
 
-    ch.ChainDic(ng)
+    ch.BreakHeadNode(ng)
 
 
 nargs = len(sys.argv)
