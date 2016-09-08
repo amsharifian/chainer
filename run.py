@@ -48,11 +48,10 @@ def main(dotfile):
     cg = nx.DiGraph()
     bl.AddChainNodes(cg, ng)
     d = bl.CreateChainDict(cg, ng)
-    
     bl.BreakLoops(ng, cg, d)
-    
-    bl.ColorGraph(ng, cg, d)
+   
 
+    bl.ColorGraph(ng, cg, d)
     nx.drawing.nx_pydot.write_dot(ng, 'sample.dot')
 
 

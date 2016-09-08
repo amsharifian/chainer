@@ -241,7 +241,7 @@ def BreakLoops(ng, cg, d):
 						
 
 def SetColor(ng, n, rank):
-	r = rank % 4 
+	r = rank % 6
 	if (r == 0):
 		ng.node[n]['style'] = 'filled'
 		ng.node[n]['fillcolor'] = 'red'
@@ -254,9 +254,15 @@ def SetColor(ng, n, rank):
 	if (r == 3):
 		ng.node[n]['style'] = 'filled'
 		ng.node[n]['fillcolor'] = 'yellow'
+	if (r == 4):
+		ng.node[n]['style'] = 'filled'
+		ng.node[n]['fillcolor'] = 'orange'
+	if (r == 5):
+		ng.node[n]['style'] = 'filled'
+		ng.node[n]['fillcolor'] = 'violet'
 
 def SetEdgeColor(ng, u, v, rank):
-	r = rank % 4 
+	r = rank % 6 
 	ng[u][v]['penwidth']='5'
 
 	try:
@@ -268,10 +274,14 @@ def SetEdgeColor(ng, u, v, rank):
 			ng[u][v]['color'] = 'green'
 		if (r == 3):
 			ng[u][v]['color'] = 'yellow'
+		if (r == 4):
+			ng[u][v]['color'] = 'orange'
+		if (r == 5):
+			ng[u][v]['color'] = 'violet'
 	except Exception, e:
 		print 'edge does not exist'
-	
-	
+
+
 def ColorGraph(ng, cg, d):
 
 	for n in nx.nodes(ng):
@@ -293,47 +303,3 @@ def ColorGraph(ng, cg, d):
 			ng[d[c][x]][d[c][x+1]]['cid'] = rank
 			SetEdgeColor(ng, d[c][x], d[c][x+1], rank)
 		rank += 1
-
-
-def OutputGraph(ng):
-	g = nx.DiGraph()
-	for n in nx.nodes(ng):
-		g.add_node(n)
-		g.node[n]['label'] = ng.node[n]['label']
-		g.node[n]['ch'] = ng.node[n]['cid']
-		g.node[n]['opcode'] = ng.node[n]['opcode']
-		g.node[n]['color'] = ng.node[n]['color']
-
-	for (u,v) in ng.edges():
-		g.add_edge(u,v)
-	return g
-
-
-# def main(dotfile):
-	# ng = CreateGraph(dotfile, [('style', '')]);
-	# PrintGraph(ng)
-
-
-	# cg = nx.DiGraph()
-	# AddChainNodes(cg, ng)
-
-	# d = CreateChainDict(cg, ng)
-
-	# BreakLoops(ng, cg, d)
-	# PrintGraph(cg)
-
-	# ColorGraph(ng, cg, d)
-	# PrintGraph(ng)
-
-	# g = OutputGraph(ng)
-	# PrintGraph(g)
-        # nx.drawing.nx_pydot.write_dot(ng,'sample.dot')
-
-# nargs = len(sys.argv)
-# if (nargs != 3):
-	# print 'usage: python breakloops.py <dot file> <output file>'
-	# sys.exit()
-
-# dotfile = sys.argv[1] 
-# fig = sys.argv[2]
-# main(dotfile) 
