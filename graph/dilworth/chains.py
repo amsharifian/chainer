@@ -21,10 +21,10 @@ unmatched = 0
 fig = "graph.dot"
 
 def PrintGraph(g):
-	global fig
-	a = nx.nx_agraph.to_agraph(g)
-	a.layout()
-	a.draw(fig)
+    global fig
+    a = nx.nx_agraph.to_agraph(g)
+    a.layout()
+    a.draw(fig)
 
 # create networkx graph
 def CreateGraph(filename, attrs):
@@ -37,36 +37,34 @@ def CreateGraph(filename, attrs):
     return(ng)
 
 
-
 def RemoveFakeEdges(ng):
-	for x,y,z in ng.edges(data=True):
-		if z.has_key('style'):
-			if z['style'] == 'dotted':
-				ng.remove_edge(x,y)
+    for x,y,z in ng.edges(data=True):
+        if z.has_key('style'):
+            if z['style'] == 'dotted':
+                ng.remove_edge(x,y)
 
 def RemoveRootNode(ng):
-	ng.remove_node('1')
+    ng.remove_node('1')
+
 
 def GetParents(ng, n):
-	l = []
-	for e in nx.all_neighbors(ng, n):
-		if (e, n) in nx.edges(ng, e):
-			l.append(e)
-	return l
+    l = []
+    for e in nx.all_neighbors(ng, n):
+        if (e, n) in nx.edges(ng, e):
+            l.append(e)
+    return l
+
 
 def AddNode(ng, opcode, color='black'):
-	global nodeid
-	ident = 'N' + str(nodeid)
-	nodeid += 1
-	ng.add_node(ident);
-	ng.node[ident]['opcode'] = opcode
-	ng.node[ident]['label'] = opcode + '(' + ident + ')' 
-	ng.node[ident]['color'] = color
-	# print 'added node', ident, opcode
-	AddEdge(ng, '1', ident, 'dotted')
-	
-
-	return ident
+    global nodeid
+    ident = 'N' + str(nodeid)
+    nodeid += 1
+    ng.add_node(ident);
+    ng.node[ident]['opcode'] = opcode
+    ng.node[ident]['label'] = opcode + '(' + ident + ')' 
+    ng.node[ident]['color'] = color
+    AddEdge(ng, '1', ident, 'dotted')
+    return ident
 
 def AddEdge(ng, src, dst, style=''):
 	ng.add_edge(src, dst)
@@ -293,7 +291,7 @@ def Dilworth(ng):
     unmatched = nx.number_of_nodes(ng)
     # print 'unmatched = ', unmatched
     # nx.drawing.nx_pydot.write_dot(gdas,'sample.dot')
-    print s
+    # print s
     
     chains = []
     while len(s) > 0:
@@ -305,7 +303,7 @@ def Dilworth(ng):
                 # print '///////////'
         ExtendBackward(gdas, ng, s, seed, chain, chains)
                 # print len(s)
-        print len(chain) + 1
+        # print len(chain) + 1
         
         unmatched = unmatched - 1
         chains.append(chain)
@@ -337,6 +335,6 @@ def BreakHeadNode(ng):
     # Updating ch IDs
     lastcid = len(chdic)
     for n in chdic[headcid]:
-        print n
         if n != headnode:
             ng.node[n]['cid'] = lastcid
+            SetColor(ng, n, lastcid)
