@@ -1,5 +1,7 @@
 {
-    "limit" : 2,
+    "limit-in" : 3,
+    "limit-out" : 3,
+    "node-limit": 2,
     "ILP"   : "true",
     "merge" : "false"
 }

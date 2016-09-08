@@ -4,11 +4,15 @@ import networkx as nx
 import json
 from graph.dilworth import chains as ch
 from graph.limitio import limitcheck as check
+from graph.breakloop import breakloops as bl
 
 
 def main(dotfile):
 
-    # Reading
+    # Reading JSON config file
+    with open ('conf/config.json') as config_file:
+        config = json.load(config_file)
+
     # Reading dot file
     ng = ch.CreateGraph(dotfile, [('style', '')])
 
@@ -22,32 +26,33 @@ def main(dotfile):
     # Removing data nodes
     ch.RemoveDataNodes(ng)
 
+    # Check number of output edeges for each node
+    check.checkEdgeOut(ng, config['node-limit'])
+
+    # Check number of input edges for each node
+    check.checkEdgeIn(ng, config['node-limit'])
+
     # Running Dilworth algorithm
     ch.Dilworth(ng)
 
     # Breaking head node
     ch.BreakHeadNode(ng)
 
-    check.checkEdgeOut(ng, 2)
 
-    check.limitChainOut(ng, 2)
+    # Limiting chains' output and input to LIMIT value
+    # from config file
+    check.limitChainOut(ng, config['limit-out'])
+    check.limitChainIn(ng, config['limit-in'])
 
-    check.limitChainIn(ng, 2)
+    # Check the chain graph for having loops and break them
+    cg = nx.DiGraph()
+    bl.AddChainNodes(cg, ng)
+    d = bl.CreateChainDict(cg, ng)
+    
+    bl.BreakLoops(ng, cg, d)
+    
+    bl.ColorGraph(ng, cg, d)
 
-    # cg = nx.DiGraph()
-    # lim.AddChainNodes(cg, ng)
-
-    # d = lim.CreateChainDict(cg, ng)
-
-    # lim.CheckInEdges(ng)
-
-    # lim.LimitChains(ng, cg, d)
-
-    # lim.ColorGraph(ng, cg, d)
-
-    # g = lim.OutputGraph(ng, cg, d)
-
-    # Writing output graph
     nx.drawing.nx_pydot.write_dot(ng, 'sample.dot')
 
 

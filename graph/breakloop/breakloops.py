@@ -309,37 +309,31 @@ def OutputGraph(ng):
 	return g
 
 
-def main(dotfile):
-	ng = CreateGraph(dotfile, [('style', '')]);
-	PrintGraph(ng)
+# def main(dotfile):
+	# ng = CreateGraph(dotfile, [('style', '')]);
+	# PrintGraph(ng)
 
 
-	cg = nx.DiGraph()
-	AddChainNodes(cg, ng)
+	# cg = nx.DiGraph()
+	# AddChainNodes(cg, ng)
 
-	d = CreateChainDict(cg, ng)
+	# d = CreateChainDict(cg, ng)
 
-	BreakLoops(ng, cg, d)
-	PrintGraph(cg)
+	# BreakLoops(ng, cg, d)
+	# PrintGraph(cg)
 
-	ColorGraph(ng, cg, d)
-	PrintGraph(ng)
+	# ColorGraph(ng, cg, d)
+	# PrintGraph(ng)
 
-	g = OutputGraph(ng)
-	PrintGraph(g)
-        nx.drawing.nx_pydot.write_dot(ng,'sample.dot')
+	# g = OutputGraph(ng)
+	# PrintGraph(g)
+        # nx.drawing.nx_pydot.write_dot(ng,'sample.dot')
 
-nargs = len(sys.argv)
-if (nargs != 3):
-	print 'usage: python breakloops.py <dot file> <output file>'
-	sys.exit()
+# nargs = len(sys.argv)
+# if (nargs != 3):
+	# print 'usage: python breakloops.py <dot file> <output file>'
+	# sys.exit()
 
-dotfile = sys.argv[1] 
-fig = sys.argv[2]
-main(dotfile) 
-
-
-
-
-
-
+# dotfile = sys.argv[1] 
+# fig = sys.argv[2]
+# main(dotfile) 

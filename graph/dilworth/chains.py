@@ -308,8 +308,8 @@ def Dilworth(ng):
         unmatched = unmatched - 1
         chains.append(chain)
 
-    for x in range(0,unmatched):
-        print 1 
+    # for x in range(0,unmatched):
+        # print 1 
 
 
 def CheckStartNode(ng):
