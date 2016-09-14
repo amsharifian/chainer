@@ -1,7 +1,5 @@
 # Chainer
-Generating chain instructions out of graphs
-
-`Chainer` is tools which decomposed input graphs base on Dilworth decomposing algorithm.
+**Chainer** is tools which decomposed input graphs base on Dilworth decomposing algorithm.
 Dilworth characterizes the width of any fninite partially ordered set in terms of a partition of the order into a minimum number of chains.
 Howerver, Dilworth itself doesn't guarantee that for directed graph, chain graph doesn't have any cycle.
 As a result `chainer` has an extra step which guarantees the output chain graph doesn't have any cycle.
