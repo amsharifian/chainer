@@ -16,6 +16,7 @@ As a result `chainer` has an extra step which guarantees the output chain graph 
 
 3. Install `chainer`'s requirments:
 
+        $ cd chainer
         $ pip install -r requirements.txt 
 
 ## Running the tools
