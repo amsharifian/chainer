@@ -57,7 +57,7 @@ def main(dotfile):
 
 nargs = len(sys.argv)
 if (nargs != 3):
-        print 'usage: python chains.py <dot file> <output file>'
+        print('usage: python run.py <dot file> <output file>')
         sys.exit()
 
 
